@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.generation.italy.applicationserver.banca.model.BancaModelException;
+import org.generation.italy.applicationserver.banca.model.TestJdbcBanca;
+import org.generation.italy.applicationserver.banca.model.entity.Movimento;
+
 @WebServlet(urlPatterns = {"/versamento", "/form-versamento"})       //java annotation WebServlet: indicazione per il container (GlassFish) con le action della URI inviata dal client che la servlet intende gestire
 public class ClienteServletJ2EE extends HttpServlet {
 
@@ -39,7 +43,7 @@ public class ClienteServletJ2EE extends HttpServlet {
         switch (actionName.toLowerCase().trim()) {
         
         	case "/versamento":
-        		
+        		actionVersamento(request, response);
         		break;
         		
         	case "/form-versamento":
@@ -49,11 +53,55 @@ public class ClienteServletJ2EE extends HttpServlet {
     }
     
     private void actionFormVersamento (HttpServletRequest request, HttpServletResponse response) 
-    																throws ServletException, IOException{
+    																throws ServletException, IOException {
     	
     	RequestDispatcher dispatcher = request.getRequestDispatcher("/form-versamento.jsp");
     	
     	dispatcher.forward(request, response);
     }
 	
+    private void actionVersamento (HttpServletRequest request, HttpServletResponse response)
+    																throws ServletException, IOException {
+    	
+    	String messageToShow = UserMessages.msgEsitoVersamentoOk;
+    	
+    	String ibanString = request.getParameter("iban") !=null ? request.getParameter("iban") : "";
+    	String importoString = request.getParameter("importo") != null ? request.getParameter("importo") : "";
+    	
+    	//controlli sintattici e semantici su parametri da web
+    	if ( 
+    		(!UtilitiesControlliSintatticiSemantici.checkFormatIban(ibanString))
+    		
+    		||
+    		
+    		(!UtilitiesControlliSintatticiSemantici.checkSementicImporto(importoString)) 
+    		
+    		) {
+    			
+    			messageToShow = UserMessages.msgErroreParametriVersamento;    		
+    	} else {
+    		
+    		Float importoFloat = new Float(importoString);
+    		
+    		Movimento movimento = new Movimento(ibanString, importoFloat, "V");
+    		
+    		try {
+				
+    			TestJdbcBanca testJdbcBanca = new TestJdbcBanca();
+    			testJdbcBanca.getMovimentoDao().addMovimento(movimento);
+    			
+    			messageToShow = UserMessages.msgEsitoVersamentoOk;
+			} catch (BancaModelException e) {
+
+				messageToShow = UserMessages.msgErroreOperazioneVersamento;
+				e.printStackTrace();
+			}
+    	}
+    	
+    	request.setAttribute("message-to-show", messageToShow);
+    	
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("message.jsp");
+    	dispatcher.forward(request, response);
+    }    
+    
 }
