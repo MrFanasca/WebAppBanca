@@ -25,7 +25,7 @@
 		
 				<br>
 				
-				<input type="submit" value="apri conto cliente">
+				<input type="submit" value="aggiungi versamento">
 			
 			</form>
 	</body>
