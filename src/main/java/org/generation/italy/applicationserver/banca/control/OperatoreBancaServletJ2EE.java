@@ -55,7 +55,7 @@ public class OperatoreBancaServletJ2EE extends HttpServlet {
 
 		switch (actionName.toLowerCase().trim()) {
 		
-			//http://localhost:8081/banca/operatore-banca/apri-conto-cliente?iban=ESaa0123456789012345678901234567&codice-fiscale=MRRGVN0123456789&valuta=EUR
+			
 			case "/apri-conto-cliente":
 				actionApriContoCliente(request, response);
 				break;
@@ -75,7 +75,7 @@ public class OperatoreBancaServletJ2EE extends HttpServlet {
 															throws ServletException, IOException {
 													//throws BancaControlException, BancaModelException	{
         RequestDispatcher dispatcher = request.getRequestDispatcher("form-apri-conto-cliente.jsp");
-        //ottiene il riferimento alla apgina JSP
+        //ottiene il riferimento alla pagina JSP
         dispatcher.forward(request, response);
 		
 	}

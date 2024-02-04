@@ -2,13 +2,14 @@ package org.generation.italy.applicationserver.banca.control;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = {})       //java annotation WebServlet: indicazione per il container (GlassFish) con le action della URI inviata dal client che la servlet intende gestire
+@WebServlet(urlPatterns = {"/versamento", "/form-versamento"})       //java annotation WebServlet: indicazione per il container (GlassFish) con le action della URI inviata dal client che la servlet intende gestire
 public class ClienteServletJ2EE extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -35,6 +36,24 @@ public class ClienteServletJ2EE extends HttpServlet {
     	
         String actionName = request.getServletPath();                               //parte action della URI: gestione della azione applicativa, la parte della URL dopo il nome della webapp...
 
+        switch (actionName.toLowerCase().trim()) {
+        
+        	case "/versamento":
+        		
+        		break;
+        		
+        	case "/form-versamento":
+        		actionFormVersamento(request, response);
+        		break;
+        }
+    }
+    
+    private void actionFormVersamento (HttpServletRequest request, HttpServletResponse response) 
+    																throws ServletException, IOException{
+    	
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("/form-versamento.jsp");
+    	
+    	dispatcher.forward(request, response);
     }
 	
 }
