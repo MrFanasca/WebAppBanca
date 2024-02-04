@@ -12,7 +12,7 @@
             <h1>Apri Conto Cliente</h1>
         </center>
         
-        	<form action="/WebAppBancaMio/apri-conto-cliente" method="post">
+        	<form action="/WebAppBancaMio/versamento" method="post">
         	
         		<p>Per favore, indicare i dati per inserire il versamento!!!.</p>
 	
